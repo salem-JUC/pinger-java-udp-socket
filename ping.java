@@ -23,6 +23,8 @@ public class ping {
         DatagramSocket socket = new DatagramSocket();
         socket.setSoTimeout(1000); //
         int sequenceNumber = 0;
+        
+        System.out.println("Ping for " + ServerAddress.getHostAddress());
         while (sequenceNumber < 10){
 
             Instant start = Instant.now();
@@ -44,25 +46,15 @@ public class ping {
                 System.out.println(e.getMessage());
             }
 
-
-            printData(response , Duration.between(start , Instant.now()).toMillis());
-
+            System.out.println(
+                "Reply from " +
+                        response.getAddress().getHostAddress() +
+                        ": "+" Bytes= "+data.length + " Delay: "+ Duration.between(start, Instant.now()).toMillis()  + "ms");
             sequenceNumber++;
 
         }
 
     }
 
-    private static void printData(DatagramPacket request , long delay) throws Exception
-    {
-        byte[] data = request.getData();
-        ByteArrayInputStream bais = new ByteArrayInputStream(data);
-        InputStreamReader isr = new InputStreamReader(bais);
-        BufferedReader br = new BufferedReader(isr);
-        String line = br.readLine();
-        System.out.println(
-                "Received from " +
-                        request.getAddress().getHostAddress() +
-                        ": "+"Bytes="+data.length + "Delay: "+ delay );
-    }
+
 }
